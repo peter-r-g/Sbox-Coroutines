@@ -3,7 +3,7 @@
   "Type": "library",
   "Org": "gooman",
   "Ident": "coroutines",
-  "Tags": null,
+  "Tags": "library",
   "Schema": 1,
   "HasAssets": false,
   "AssetsPath": "",
@@ -23,6 +23,10 @@
       "Nullables": true,
       "References": [],
       "DistinctReferences": []
-    }
+    },
+    "Summary": "A Unity-like coroutine library. Used for synchronous operations that execute across a period of time.",
+    "Description": "# Sbox-Coroutines\nA [Unity-like coroutine](https://docs.unity3d.com/2023.2/Documentation/Manual/Coroutines.html) library. Used for synchronous operations that execute across a period of time.\n\n## Usage\nSee the [API wiki](https://github.com/peter-r-g/Sbox-Coroutines/wiki)\n\n## Installation\nYou can either download from this repo or you can reference it with \u0060gooman.entity_pools\u0060 using [asset.party](https://asset.party/gooman/coroutines)\n\n## License\nDistributed under the MIT License. See the [license](https://github.com/peter-r-g/Sbox-EntityPools/blob/master/LICENSE.md) for more information.\n",
+    "Public": true,
+    "ReplaceTags": "library"
   }
 }
