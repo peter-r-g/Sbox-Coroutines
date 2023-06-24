@@ -17,7 +17,7 @@ internal sealed class CoroutineInstance
 	internal bool IsFinished { get; private set; }
 
 	/// <summary>
-	/// Returns the current waiting strategy of the coroutine.
+	/// Returns the current execution strategy of the coroutine.
 	/// </summary>
 	internal ExecutionStrategy CurrentExecutionStrategy => CurrentStall.ExecutionStrategy;
 	/// <summary>
