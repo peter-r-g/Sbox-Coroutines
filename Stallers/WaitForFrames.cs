@@ -13,7 +13,7 @@ public sealed class WaitForFrames : ICoroutineStaller
 	/// <inheritdoc/>
 	public bool IsComplete => FramesTillComplete <= 0;
 	/// <inheritdoc/>
-	public WaitingStrategy WaitingStrategy => WaitingStrategy.Frame;
+	public ExecutionStrategy ExecutionStrategy => ExecutionStrategy.Frame;
 
 	/// <summary>
 	/// The amount of frames left to wait.
@@ -31,7 +31,7 @@ public sealed class WaitForFrames : ICoroutineStaller
 	}
 
 	/// <inheritdoc/>
-	public void Tick()
+	public void Update()
 	{
 		FramesTillComplete--;
 	}

@@ -1,19 +1,19 @@
 ﻿namespace Coroutines;
 
 /// <summary>
-/// Defines the way for coroutines to be updated.
+/// Defines a way for coroutines to check their blocked state and resume execution.
 /// </summary>
-public enum WaitingStrategy
+public enum ExecutionStrategy
 {
 	/// <summary>
-	/// Updates on game ticks.
+	/// Updates on game tick.
 	/// </summary>
 	Tick,
 	/// <summary>
-	/// Updates on game frames.
+	/// Updates on game client frame.
 	/// </summary>
 	/// <remarks>
 	/// This is only supported on client.
 	/// </remarks>
-	Frame
+	Frame,
 }

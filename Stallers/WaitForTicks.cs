@@ -8,7 +8,7 @@ public sealed class WaitForTicks : ICoroutineStaller
 	/// <inheritdoc/>
 	public bool IsComplete => TicksTillComplete <= 0;
 	/// <inheritdoc/>
-	public WaitingStrategy WaitingStrategy => WaitingStrategy.Tick;
+	public ExecutionStrategy ExecutionStrategy => ExecutionStrategy.Tick;
 
 	/// <summary>
 	/// The amount of ticks left to wait.
@@ -25,7 +25,7 @@ public sealed class WaitForTicks : ICoroutineStaller
 	}
 
 	/// <inheritdoc/>
-	public void Tick()
+	public void Update()
 	{
 		TicksTillComplete--;
 	}

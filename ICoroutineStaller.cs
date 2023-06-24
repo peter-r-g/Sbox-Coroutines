@@ -1,4 +1,6 @@
-﻿namespace Coroutines;
+﻿using System;
+
+namespace Coroutines;
 
 /// <summary>
 /// Defines a type that can stall a coroutine.
@@ -10,9 +12,9 @@ public interface ICoroutineStaller
 	/// </summary>
 	bool IsComplete { get; }
 	/// <summary>
-	/// Returns the way for the staller to be updated.
+	/// Returns the way for the staller to be updated and execution to continue.
 	/// </summary>
-	WaitingStrategy WaitingStrategy { get; }
+	ExecutionStrategy ExecutionStrategy { get; }
 
 	/// <summary>
 	/// Updates the stallers state.

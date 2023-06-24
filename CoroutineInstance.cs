@@ -19,7 +19,7 @@ internal sealed class CoroutineInstance
 	/// <summary>
 	/// Returns the current waiting strategy of the coroutine.
 	/// </summary>
-	internal WaitingStrategy CurrentWaitingStrategy => CurrentStall.WaitingStrategy;
+	internal ExecutionStrategy CurrentExecutionStrategy => CurrentStall.ExecutionStrategy;
 	/// <summary>
 	/// Returns the current staller of the coroutine.
 	/// </summary>

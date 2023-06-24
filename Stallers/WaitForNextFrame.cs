@@ -11,10 +11,10 @@ public sealed class WaitForNextFrame : ICoroutineStaller
 	/// <inheritdoc/>
 	public bool IsComplete { get; private set; }
 	/// <inheritdoc/>
-	public WaitingStrategy WaitingStrategy => WaitingStrategy.Frame;
+	public ExecutionStrategy ExecutionStrategy => ExecutionStrategy.Frame;
 
 	/// <inheritdoc/>
-	public void Tick()
+	public void Update()
 	{
 		IsComplete = true;
 	}

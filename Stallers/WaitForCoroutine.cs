@@ -11,7 +11,7 @@ public sealed class WaitForCoroutine : ICoroutineStaller
 	/// <inheritdoc/>
 	public bool IsComplete { get; private set; }
 	/// <inheritdoc/>
-	public WaitingStrategy WaitingStrategy { get; }
+	public ExecutionStrategy ExecutionStrategy { get; }
 
 	/// <summary>
 	/// The coroutine to wait for.
@@ -22,18 +22,18 @@ public sealed class WaitForCoroutine : ICoroutineStaller
 	/// Initializes a new instance of <see cref="WaitForCoroutine"/>.
 	/// </summary>
 	/// <param name="coroutine">The coroutine to wait for.</param>
-	/// <param name="waitingStrategy">The way for the coroutine to wait for completion.</param>
-	public WaitForCoroutine( IEnumerator<ICoroutineStaller> coroutine, WaitingStrategy waitingStrategy = WaitingStrategy.Tick )
+	/// <param name="executingStrategy">The way for the coroutine to wait for completion.</param>
+	public WaitForCoroutine( IEnumerator<ICoroutineStaller> coroutine, ExecutionStrategy executingStrategy = ExecutionStrategy.Tick )
 	{
-		if ( waitingStrategy == WaitingStrategy.Frame )
+		if ( executingStrategy == ExecutionStrategy.Frame )
 			Game.AssertClientOrMenu();
 
 		CoroutineToWaitFor = coroutine;
-		WaitingStrategy = waitingStrategy;
+		ExecutionStrategy = executingStrategy;
 	}
 
 	/// <inheritdoc/>
-	public void Tick()
+	public void Update()
 	{
 		IsComplete = Coroutine.IsComplete( CoroutineToWaitFor );
 	}

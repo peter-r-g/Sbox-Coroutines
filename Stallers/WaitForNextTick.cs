@@ -8,10 +8,10 @@ public sealed class WaitForNextTick : ICoroutineStaller
 	/// <inheritdoc/>
 	public bool IsComplete { get; private set; }
 	/// <inheritdoc/>
-	public WaitingStrategy WaitingStrategy => WaitingStrategy.Tick;
+	public ExecutionStrategy ExecutionStrategy => ExecutionStrategy.Tick;
 
 	/// <inheritdoc/>
-	public void Tick()
+	public void Update()
 	{
 		IsComplete = true;
 	}

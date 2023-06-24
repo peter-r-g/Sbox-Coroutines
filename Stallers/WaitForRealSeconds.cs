@@ -13,7 +13,7 @@ public sealed class WaitForRealSeconds : ICoroutineStaller
 	/// <inheritdoc/>
 	public bool IsComplete => RealSecondsUntilComplete <= 0;
 	/// <inheritdoc/>
-	public WaitingStrategy WaitingStrategy { get; }
+	public ExecutionStrategy ExecutionStrategy { get; }
 
 	/// <summary>
 	/// The number of seconds left until completion.
@@ -24,18 +24,18 @@ public sealed class WaitForRealSeconds : ICoroutineStaller
 	/// Initializes a new instance of <see cref="WaitForRealSeconds"/>.
 	/// </summary>
 	/// <param name="seconds">The number of seconds to wait.</param>
-	/// <param name="waitingStrategy">The way for the coroutine to wait for completion.</param>
-	public WaitForRealSeconds( float seconds, WaitingStrategy waitingStrategy = WaitingStrategy.Tick )
+	/// <param name="executionStrategy">The way for the coroutine to wait for completion.</param>
+	public WaitForRealSeconds( float seconds, ExecutionStrategy executionStrategy = ExecutionStrategy.Tick )
 	{
-		if ( waitingStrategy == WaitingStrategy.Frame )
+		if ( executionStrategy == ExecutionStrategy.Frame )
 			Game.AssertClientOrMenu();
 
 		RealSecondsUntilComplete = seconds;
-		WaitingStrategy = waitingStrategy;
+		ExecutionStrategy = executionStrategy;
 	}
 
 	/// <inheritdoc/>
-	public void Tick()
+	public void Update()
 	{
 	}
 }

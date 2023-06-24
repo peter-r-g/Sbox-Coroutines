@@ -181,10 +181,28 @@ public static class Coroutine
 	}
 
 	/// <summary>
-	/// Empties all coroutine queues and updates coroutines that have the <see cref="WaitingStrategy.Tick"/> waiting strategy.
+	/// Updates all coroutines that are blocked by a <see cref="ExecutionStrategy.Tick"/> strategy.
 	/// </summary>
 	[GameEvent.Tick]
 	private static void Tick()
+	{
+		StepCoroutines( ExecutionStrategy.Tick );
+	}
+
+	/// <summary>
+	/// Updates all coroutines that are blocked by a <see cref="ExecutionStrategy.Frame"/> strategy.
+	/// </summary>
+	[GameEvent.Client.Frame]
+	private static void Frame()
+	{
+		StepCoroutines( ExecutionStrategy.Frame );
+	}
+
+	/// <summary>
+	/// Empties all coroutine queues steps all coroutines that match the provided <paramref name="strategy"/>.
+	/// </summary>
+	/// <param name="strategy">The strategy to step.</param>
+	private static void StepCoroutines( ExecutionStrategy strategy )
 	{
 		while ( CoroutinesToAdd.TryDequeue( out var coroutine ) )
 			AddCoroutine( coroutine );
@@ -194,27 +212,10 @@ public static class Coroutine
 
 		foreach ( var coroutineInstance in Coroutines )
 		{
-			if ( coroutineInstance.CurrentWaitingStrategy != WaitingStrategy.Tick )
+			if ( coroutineInstance.CurrentExecutionStrategy != strategy )
 				continue;
 
-			coroutineInstance.Tick();
-			if ( coroutineInstance.IsFinished )
-				CoroutinesToRemove.Enqueue( coroutineInstance.Coroutine );
-		}
-	}
-
-	/// <summary>
-	/// Updates coroutines that have the <see cref="WaitingStrategy.Frame"/> waiting strategy.
-	/// </summary>
-	[GameEvent.Client.Frame]
-	private static void Frame()
-	{
-		foreach ( var coroutineInstance in Coroutines )
-		{
-			if ( coroutineInstance.CurrentWaitingStrategy != WaitingStrategy.Frame )
-				continue;
-
-			coroutineInstance.Tick();
+			coroutineInstance.Update();
 			if ( coroutineInstance.IsFinished )
 				CoroutinesToRemove.Enqueue( coroutineInstance.Coroutine );
 		}
