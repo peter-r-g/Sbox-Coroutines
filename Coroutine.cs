@@ -18,6 +18,11 @@ namespace Coroutines;
 public static class Coroutine
 {
 	/// <summary>
+	/// The client that is currently being simulated in coroutines that are executing in <see cref="ExecutionStrategy.Simulate"/>.
+	/// </summary>
+	public static IClient? SimulatedClient { get; private set; }
+
+	/// <summary>
 	/// A thread-safe queue to add new coroutines.
 	/// </summary>
 	private static ConcurrentQueue<IEnumerator<ICoroutineStaller>> CoroutinesToAdd { get; } = new();
@@ -146,6 +151,19 @@ public static class Coroutine
 		}
 
 		return true;
+	}
+
+	/// <summary>
+	/// Simulates all coroutines that are blocked by a <see cref="ExecutionStrategy.Simulate"/> strategy.
+	/// </summary>
+	/// <param name="cl">The client that is being simulated.</param>
+	public static void Simulate( IClient cl )
+	{
+		ThreadSafe.AssertIsMainThread();
+
+		SimulatedClient = cl;
+		StepCoroutines( ExecutionStrategy.Simulate );
+		SimulatedClient = null;
 	}
 
 	/// <summary>

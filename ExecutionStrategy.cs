@@ -16,4 +16,8 @@ public enum ExecutionStrategy
 	/// This is only supported on client.
 	/// </remarks>
 	Frame,
+	/// <summary>
+	/// Updates on input simulation.
+	/// </summary>
+	Simulate
 }
