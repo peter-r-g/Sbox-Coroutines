@@ -19,5 +19,5 @@ public interface ICoroutineStaller
 	/// <summary>
 	/// Updates the stallers state.
 	/// </summary>
-	void Tick();
+	void Update();
 }

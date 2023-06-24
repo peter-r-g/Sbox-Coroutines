@@ -36,14 +36,14 @@ internal sealed class CoroutineInstance
 	}
 
 	/// <summary>
-	/// Ticks the state of the coroutine.
+	/// Updates the state of the coroutine.
 	/// </summary>
-	internal void Tick()
+	internal void Update()
 	{
 		if ( IsFinished )
 			return;
 
-		CurrentStall.Tick();
+		CurrentStall.Update();
 		if ( !CurrentStall.IsComplete )
 			return;
 
