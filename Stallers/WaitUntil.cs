@@ -23,7 +23,7 @@ public sealed class WaitUntil : ICoroutineStaller
 	/// </summary>
 	/// <param name="waiter">The method to wait for.</param>
 	/// <param name="executionStrategy">The way for the coroutine to wait for completion.</param>
-	public WaitUntil( Func<bool> waiter, ExecutionStrategy executionStrategy = ExecutionStrategy.Tick )
+	public WaitUntil( Func<bool> waiter, ExecutionStrategy executionStrategy = ExecutionStrategy.Preserve )
 	{
 		if ( executionStrategy == ExecutionStrategy.Frame )
 			Game.AssertClientOrMenu();

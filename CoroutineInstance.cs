@@ -19,7 +19,20 @@ internal sealed class CoroutineInstance
 	/// <summary>
 	/// Returns the current execution strategy of the coroutine.
 	/// </summary>
-	internal ExecutionStrategy CurrentExecutionStrategy => CurrentStall.ExecutionStrategy;
+	internal ExecutionStrategy CurrentExecutionStrategy
+	{
+		get
+		{
+			if ( CurrentStall.ExecutionStrategy == ExecutionStrategy.Preserve )
+				return LastExecutionStrategy;
+
+			return CurrentStall.ExecutionStrategy;
+		}
+	}
+	/// <summary>
+	/// The last valid execution strategy that was used.
+	/// </summary>
+	private ExecutionStrategy LastExecutionStrategy { get; set; } = ExecutionStrategy.Tick;
 	/// <summary>
 	/// Returns the current staller of the coroutine.
 	/// </summary>
@@ -52,5 +65,8 @@ internal sealed class CoroutineInstance
 			IsFinished = true;
 			return;
 		}
+
+		if ( CurrentStall.ExecutionStrategy != ExecutionStrategy.Preserve )
+			LastExecutionStrategy = CurrentStall.ExecutionStrategy;
 	}
 }

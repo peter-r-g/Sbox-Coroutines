@@ -23,7 +23,7 @@ public sealed class WaitForCoroutine : ICoroutineStaller
 	/// </summary>
 	/// <param name="coroutine">The coroutine to wait for.</param>
 	/// <param name="executingStrategy">The way for the coroutine to wait for completion.</param>
-	public WaitForCoroutine( IEnumerator<ICoroutineStaller> coroutine, ExecutionStrategy executingStrategy = ExecutionStrategy.Tick )
+	public WaitForCoroutine( IEnumerator<ICoroutineStaller> coroutine, ExecutionStrategy executingStrategy = ExecutionStrategy.Preserve )
 	{
 		if ( executingStrategy == ExecutionStrategy.Frame )
 			Game.AssertClientOrMenu();

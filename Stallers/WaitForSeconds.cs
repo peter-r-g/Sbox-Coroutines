@@ -25,7 +25,7 @@ public sealed class WaitForSeconds : ICoroutineStaller
 	/// </summary>
 	/// <param name="seconds">The number of seconds to wait.</param>
 	/// <param name="executionStrategy">The way for the coroutine to wait for completion.</param>
-	public WaitForSeconds( float seconds, ExecutionStrategy executionStrategy = ExecutionStrategy.Tick )
+	public WaitForSeconds( float seconds, ExecutionStrategy executionStrategy = ExecutionStrategy.Preserve )
 	{
 		if ( executionStrategy == ExecutionStrategy.Frame )
 			Game.AssertClientOrMenu();

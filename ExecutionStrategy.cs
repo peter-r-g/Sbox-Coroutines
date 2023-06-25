@@ -6,6 +6,10 @@
 public enum ExecutionStrategy
 {
 	/// <summary>
+	/// Preserves the execution strategy the coroutine is currently in.
+	/// </summary>
+	Preserve,
+	/// <summary>
 	/// Updates on game tick.
 	/// </summary>
 	Tick,
