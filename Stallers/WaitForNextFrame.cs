@@ -1,4 +1,6 @@
-﻿namespace Coroutines.Stallers;
+﻿using Sandbox;
+
+namespace Coroutines.Stallers;
 
 /// <summary>
 /// Pauses a coroutine until the next frame.
@@ -12,6 +14,14 @@ public sealed class WaitForNextFrame : ICoroutineStaller
 	public bool IsComplete { get; private set; }
 	/// <inheritdoc/>
 	public ExecutionStrategy ExecutionStrategy => ExecutionStrategy.Frame;
+
+	/// <summary>
+	/// Initializes a new instance of <see cref="WaitForNextFrame"/>.
+	/// </summary>
+	public WaitForNextFrame()
+	{
+		Game.AssertClientOrMenu();
+	}
 
 	/// <inheritdoc/>
 	public void Update()
