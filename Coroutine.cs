@@ -34,6 +34,10 @@ public static class Coroutine
 	/// A list of all currently executing coroutines.
 	/// </summary>
 	private static List<CoroutineInstance> Coroutines { get; } = new();
+	/// <summary>
+	/// A main thread queue to add coroutines once their execution strategy has finished.
+	/// </summary>
+	private static Dictionary<ExecutionStrategy, Queue<CoroutineInstance>> QueuedCoroutines { get; } = new();
 
 	/// <summary>
 	/// Starts a new coroutine that is fetched from the <paramref name="coroutineMethod"/>.
@@ -167,14 +171,31 @@ public static class Coroutine
 	}
 
 	/// <summary>
-	/// Creates a coroutine wrapper and adds it to the system if it hasn't pre-maturely finished.
+	/// Creates a coroutine wrapper and queues it for the system if it hasn't pre-maturely finished.
 	/// </summary>
 	/// <param name="coroutine">The coroutine to add.</param>
-	private static void AddCoroutine( IEnumerator<ICoroutineStaller> coroutine )
+	private static void QueueCoroutine( IEnumerator<ICoroutineStaller> coroutine )
 	{
 		var coroutineInstance = new CoroutineInstance( coroutine );
-		if ( !coroutineInstance.IsFinished )
-			Coroutines.Add( coroutineInstance );
+		if ( coroutineInstance.IsFinished )
+			return;
+
+		if ( !QueuedCoroutines.TryGetValue( coroutineInstance.CurrentExecutionStrategy, out var queue ) )
+		{
+			queue = new Queue<CoroutineInstance>();
+			QueuedCoroutines.Add( coroutineInstance.CurrentExecutionStrategy, queue );
+		}
+		
+		queue.Enqueue( coroutineInstance );
+	}
+
+	/// <summary>
+	/// Adds the coroutine instance to the internal system.
+	/// </summary>
+	/// <param name="coroutineInstance">The coroutine instance to add.</param>
+	private static void AddCoroutine( CoroutineInstance coroutineInstance )
+	{
+		Coroutines.Add( coroutineInstance );
 	}
 
 	/// <summary>
@@ -233,7 +254,13 @@ public static class Coroutine
 		}
 
 		while ( CoroutinesToAdd.TryDequeue( out var coroutine ) )
-			AddCoroutine( coroutine );
+			QueueCoroutine( coroutine );
+
+		if ( QueuedCoroutines.TryGetValue( strategy, out var queue ) )
+		{
+			while ( queue.TryDequeue( out var coroutine ) )
+				AddCoroutine( coroutine );
+		}
 
 		while ( CoroutinesToRemove.TryDequeue( out var coroutine ) )
 			RemoveCoroutine( coroutine );
