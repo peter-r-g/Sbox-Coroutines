@@ -222,12 +222,6 @@ public static class Coroutine
 	/// <param name="strategy">The strategy to step.</param>
 	private static void StepCoroutines( ExecutionStrategy strategy )
 	{
-		while ( CoroutinesToAdd.TryDequeue( out var coroutine ) )
-			AddCoroutine( coroutine );
-
-		while ( CoroutinesToRemove.TryDequeue( out var coroutine ) )
-			RemoveCoroutine( coroutine );
-
 		foreach ( var coroutineInstance in Coroutines )
 		{
 			if ( coroutineInstance.CurrentExecutionStrategy != strategy )
@@ -237,5 +231,11 @@ public static class Coroutine
 			if ( coroutineInstance.IsFinished )
 				CoroutinesToRemove.Enqueue( coroutineInstance.Coroutine );
 		}
+
+		while ( CoroutinesToAdd.TryDequeue( out var coroutine ) )
+			AddCoroutine( coroutine );
+
+		while ( CoroutinesToRemove.TryDequeue( out var coroutine ) )
+			RemoveCoroutine( coroutine );
 	}
 }
