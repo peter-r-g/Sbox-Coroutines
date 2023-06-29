@@ -248,9 +248,19 @@ public static class Coroutine
 			if ( coroutineInstance.CurrentExecutionStrategy != strategy )
 				continue;
 
-			coroutineInstance.Update();
-			if ( coroutineInstance.IsFinished )
-				CoroutinesToRemove.Enqueue( coroutineInstance.Coroutine );
+			try
+			{
+				coroutineInstance.Update();
+			}
+			catch ( Exception e )
+			{
+				Log.Error( e, "An exception occurred during execution of a Coroutine" );
+			}
+			finally
+			{
+				if ( coroutineInstance.IsFinished )
+					CoroutinesToRemove.Enqueue( coroutineInstance.Coroutine );
+			}
 		}
 
 		while ( CoroutinesToAdd.TryDequeue( out var coroutine ) )
