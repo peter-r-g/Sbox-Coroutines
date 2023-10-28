@@ -28,6 +28,11 @@ public static class Coroutine
 	public static bool IsSceneSystem { get; set; }
 
 	/// <summary>
+	/// The default <see cref="ExecutionStrategy"/> to use in coroutines.
+	/// </summary>
+	public static ExecutionStrategy DefaultExecutionStrategy => IsSceneSystem ? ExecutionStrategy.Frame : ExecutionStrategy.Tick;
+
+	/// <summary>
 	/// A thread-safe queue to add new coroutines.
 	/// </summary>
 	private static ConcurrentQueue<IEnumerator<ICoroutineStaller>> CoroutinesToAdd { get; } = new();
