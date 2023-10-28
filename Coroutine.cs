@@ -23,6 +23,11 @@ public static class Coroutine
 	public static IClient? SimulatedClient { get; private set; }
 
 	/// <summary>
+	/// Whether or not the library is operating within the new scene system.
+	/// </summary>
+	public static bool IsSceneSystem { get; set; }
+
+	/// <summary>
 	/// A thread-safe queue to add new coroutines.
 	/// </summary>
 	private static ConcurrentQueue<IEnumerator<ICoroutineStaller>> CoroutinesToAdd { get; } = new();
@@ -225,6 +230,9 @@ public static class Coroutine
 	[GameEvent.Tick]
 	private static void Tick()
 	{
+		if ( IsSceneSystem )
+			return;
+
 		StepCoroutines( ExecutionStrategy.Tick );
 	}
 
@@ -234,6 +242,21 @@ public static class Coroutine
 	[GameEvent.Client.Frame]
 	private static void Frame()
 	{
+		if ( IsSceneSystem )
+			return;
+
+		StepCoroutines( ExecutionStrategy.Frame );
+	}
+
+	/// <summary>
+	/// Updates all coroutines that are blocked by a <see cref="ExecutionStrategy.Frame"/> strategy.
+	/// </summary>
+	[Event( "frame" )]
+	private static void SceneFrame()
+	{
+		if ( !IsSceneSystem )
+			return;
+
 		StepCoroutines( ExecutionStrategy.Frame );
 	}
 
