@@ -44,8 +44,8 @@ public static class Coroutine
 	/// </summary>
 	/// <param name="coroutineMethod">The method to get the coroutine instance from.</param>
 	/// <returns>The coroutine instance that was retrieved.</returns>
-    public static IEnumerator<ICoroutineStaller> Start( Func<IEnumerator<ICoroutineStaller>> coroutineMethod )
-    {
+	public static IEnumerator<ICoroutineStaller> Start( Func<IEnumerator<ICoroutineStaller>> coroutineMethod )
+	{
 		var coroutine = coroutineMethod.Invoke();
 		CoroutinesToAdd.Enqueue( coroutine );
 		return coroutine;
@@ -185,7 +185,7 @@ public static class Coroutine
 			queue = new Queue<CoroutineInstance>();
 			QueuedCoroutines.Add( coroutineInstance.CurrentExecutionStrategy, queue );
 		}
-		
+
 		queue.Enqueue( coroutineInstance );
 	}
 

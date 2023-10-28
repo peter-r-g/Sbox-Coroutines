@@ -60,7 +60,7 @@ internal sealed class CoroutineInstance
 		if ( !CurrentStall.IsComplete )
 			return;
 
-		if ( !Coroutine.MoveNext()|| CurrentStall is null )
+		if ( !Coroutine.MoveNext() || CurrentStall is null )
 		{
 			IsFinished = true;
 			return;
