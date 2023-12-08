@@ -10,18 +10,10 @@ public enum ExecutionStrategy
 	/// </summary>
 	Preserve,
 	/// <summary>
-	/// Updates on game tick.
-	/// </summary>
-	Tick,
-	/// <summary>
 	/// Updates on game client frame.
 	/// </summary>
 	/// <remarks>
 	/// This is only supported on client.
 	/// </remarks>
-	Frame,
-	/// <summary>
-	/// Updates on input simulation.
-	/// </summary>
-	Simulate
+	Frame
 }

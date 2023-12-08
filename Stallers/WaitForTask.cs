@@ -10,7 +10,7 @@ public sealed class WaitForTask : ICoroutineStaller
 	/// <inheritdoc/>
 	public bool IsComplete => Task.IsCompleted;
 	/// <inheritdoc/>
-	public ExecutionStrategy ExecutionStrategy => ExecutionStrategy.Tick;
+	public ExecutionStrategy ExecutionStrategy => ExecutionStrategy.Frame;
 
 	/// <summary>
 	/// The task to wait for.

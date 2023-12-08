@@ -18,19 +18,9 @@ namespace Coroutines;
 public static class Coroutine
 {
 	/// <summary>
-	/// The client that is currently being simulated in coroutines that are executing in <see cref="ExecutionStrategy.Simulate"/>.
-	/// </summary>
-	public static IClient? SimulatedClient { get; private set; }
-
-	/// <summary>
-	/// Whether or not the library is operating within the new scene system.
-	/// </summary>
-	public static bool IsSceneSystem { get; set; }
-
-	/// <summary>
 	/// The default <see cref="ExecutionStrategy"/> to use in coroutines.
 	/// </summary>
-	public static ExecutionStrategy DefaultExecutionStrategy => IsSceneSystem ? ExecutionStrategy.Frame : ExecutionStrategy.Tick;
+	public static ExecutionStrategy DefaultExecutionStrategy => ExecutionStrategy.Frame;
 
 	/// <summary>
 	/// A thread-safe queue to add new coroutines.
@@ -168,19 +158,6 @@ public static class Coroutine
 	}
 
 	/// <summary>
-	/// Simulates all coroutines that are blocked by a <see cref="ExecutionStrategy.Simulate"/> strategy.
-	/// </summary>
-	/// <param name="cl">The client that is being simulated.</param>
-	public static void Simulate( IClient cl )
-	{
-		ThreadSafe.AssertIsMainThread();
-
-		SimulatedClient = cl;
-		StepCoroutines( ExecutionStrategy.Simulate );
-		SimulatedClient = null;
-	}
-
-	/// <summary>
 	/// Creates a coroutine wrapper and queues it for the system if it hasn't pre-maturely finished.
 	/// </summary>
 	/// <param name="coroutine">The coroutine to add.</param>
@@ -230,38 +207,11 @@ public static class Coroutine
 	}
 
 	/// <summary>
-	/// Updates all coroutines that are blocked by a <see cref="ExecutionStrategy.Tick"/> strategy.
-	/// </summary>
-	[GameEvent.Tick]
-	private static void Tick()
-	{
-		if ( IsSceneSystem )
-			return;
-
-		StepCoroutines( ExecutionStrategy.Tick );
-	}
-
-	/// <summary>
-	/// Updates all coroutines that are blocked by a <see cref="ExecutionStrategy.Frame"/> strategy.
-	/// </summary>
-	[GameEvent.Client.Frame]
-	private static void Frame()
-	{
-		if ( IsSceneSystem )
-			return;
-
-		StepCoroutines( ExecutionStrategy.Frame );
-	}
-
-	/// <summary>
 	/// Updates all coroutines that are blocked by a <see cref="ExecutionStrategy.Frame"/> strategy.
 	/// </summary>
 	[Event( "frame" )]
 	private static void SceneFrame()
 	{
-		if ( !IsSceneSystem )
-			return;
-
 		StepCoroutines( ExecutionStrategy.Frame );
 	}
 

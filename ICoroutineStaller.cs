@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Coroutines;
+﻿namespace Coroutines;
 
 /// <summary>
 /// Defines a type that can stall a coroutine.
