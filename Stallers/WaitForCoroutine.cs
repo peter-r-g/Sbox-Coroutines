@@ -1,5 +1,5 @@
-﻿using Sandbox;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using static Sandbox.GameObjectSystem;
 
 namespace Coroutines.Stallers;
 
@@ -11,7 +11,7 @@ public sealed class WaitForCoroutine : ICoroutineStaller
 	/// <inheritdoc/>
 	public bool IsComplete { get; private set; }
 	/// <inheritdoc/>
-	public ExecutionStrategy ExecutionStrategy { get; }
+	public Stage PollingStage { get; }
 
 	/// <summary>
 	/// The coroutine to wait for.
@@ -22,14 +22,11 @@ public sealed class WaitForCoroutine : ICoroutineStaller
 	/// Initializes a new instance of <see cref="WaitForCoroutine"/>.
 	/// </summary>
 	/// <param name="coroutine">The coroutine to wait for.</param>
-	/// <param name="executingStrategy">The way for the coroutine to wait for completion.</param>
-	public WaitForCoroutine( IEnumerator<ICoroutineStaller> coroutine, ExecutionStrategy executingStrategy = ExecutionStrategy.Preserve )
+	/// <param name="pollingStage">The way for the coroutine to wait for completion.</param>
+	public WaitForCoroutine( IEnumerator<ICoroutineStaller> coroutine, Stage pollingStage = Coroutine.PreservePollingStage )
 	{
-		if ( executingStrategy == ExecutionStrategy.Frame )
-			Game.AssertClientOrMenu();
-
 		CoroutineToWaitFor = coroutine;
-		ExecutionStrategy = executingStrategy;
+		PollingStage = pollingStage;
 	}
 
 	/// <inheritdoc/>

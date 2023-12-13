@@ -3,6 +3,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using static Sandbox.GameObjectSystem;
 
 namespace Coroutines;
 
@@ -18,9 +19,15 @@ namespace Coroutines;
 public class Coroutine : GameObjectSystem
 {
 	/// <summary>
-	/// The default <see cref="ExecutionStrategy"/> to use in coroutines.
+	/// The default <see cref="Stage"/> to use in coroutines.
 	/// </summary>
-	public static ExecutionStrategy DefaultExecutionStrategy => ExecutionStrategy.Frame;
+	/// FIXME: Should be a { get; set; } property but Sbox code gen breaks.
+	public const Stage DefaultPollingStage = Stage.UpdateBones;
+
+	/// <summary>
+	/// A custom <see cref="Stage"/> enum to represent preserving the previously selected <see cref="Stage"/>.
+	/// </summary>
+	public const Stage PreservePollingStage = (Stage)int.MinValue;
 
 	/// <summary>
 	/// A thread-safe queue to add new coroutines.
@@ -35,9 +42,9 @@ public class Coroutine : GameObjectSystem
 	/// </summary>
 	private static List<CoroutineInstance> Coroutines { get; } = new();
 	/// <summary>
-	/// A main thread queue to add coroutines once their execution strategy has finished.
+	/// A main thread queue to add coroutines once their polling stage has finished.
 	/// </summary>
-	private static Dictionary<ExecutionStrategy, Queue<CoroutineInstance>> QueuedCoroutines { get; } = new();
+	private static Dictionary<Stage, Queue<CoroutineInstance>> QueuedCoroutines { get; } = new();
 
 	/// <summary>
 	/// Initializes a new instance of <see cref="Coroutine"/>. This should not need to be constructed in user code.
@@ -176,10 +183,10 @@ public class Coroutine : GameObjectSystem
 		if ( coroutineInstance.IsFinished )
 			return;
 
-		if ( !QueuedCoroutines.TryGetValue( coroutineInstance.CurrentExecutionStrategy, out var queue ) )
+		if ( !QueuedCoroutines.TryGetValue( coroutineInstance.CurrentPollingStage, out var queue ) )
 		{
 			queue = new Queue<CoroutineInstance>();
-			QueuedCoroutines.Add( coroutineInstance.CurrentExecutionStrategy, queue );
+			QueuedCoroutines.Add( coroutineInstance.CurrentPollingStage, queue );
 		}
 
 		queue.Enqueue( coroutineInstance );
@@ -216,22 +223,22 @@ public class Coroutine : GameObjectSystem
 	}
 
 	/// <summary>
-	/// Updates all coroutines that are blocked by a <see cref="ExecutionStrategy.Frame"/> strategy.
+	/// Updates all coroutines that are blocked by a <see cref="Stage.UpdateBones"/> stage.
 	/// </summary>
 	private static void SceneFrame()
 	{
-		StepCoroutines( ExecutionStrategy.Frame );
+		StepCoroutines( Stage.UpdateBones );
 	}
 
 	/// <summary>
-	/// Empties all coroutine queues steps all coroutines that match the provided <paramref name="strategy"/>.
+	/// Empties all coroutine queues steps all coroutines that match the provided <paramref name="stage"/>.
 	/// </summary>
-	/// <param name="strategy">The strategy to step.</param>
-	private static void StepCoroutines( ExecutionStrategy strategy )
+	/// <param name="stage">The <see cref="Stage"/> to step.</param>
+	private static void StepCoroutines( Stage stage )
 	{
 		foreach ( var coroutineInstance in Coroutines )
 		{
-			if ( coroutineInstance.CurrentExecutionStrategy != strategy )
+			if ( coroutineInstance.CurrentPollingStage != stage )
 				continue;
 
 			try
@@ -252,7 +259,7 @@ public class Coroutine : GameObjectSystem
 		while ( CoroutinesToAdd.TryDequeue( out var coroutine ) )
 			QueueCoroutine( coroutine );
 
-		if ( QueuedCoroutines.TryGetValue( strategy, out var queue ) )
+		if ( QueuedCoroutines.TryGetValue( stage, out var queue ) )
 		{
 			while ( queue.TryDequeue( out var coroutine ) )
 				AddCoroutine( coroutine );

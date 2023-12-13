@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using static Sandbox.GameObjectSystem;
 
 namespace Coroutines.Stallers;
 
@@ -10,7 +11,7 @@ public sealed class WaitForTask : ICoroutineStaller
 	/// <inheritdoc/>
 	public bool IsComplete => Task.IsCompleted;
 	/// <inheritdoc/>
-	public ExecutionStrategy ExecutionStrategy => ExecutionStrategy.Frame;
+	public Stage PollingStage { get; } = Coroutine.DefaultPollingStage;
 
 	/// <summary>
 	/// The task to wait for.

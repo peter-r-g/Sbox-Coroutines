@@ -1,19 +1,16 @@
-﻿using Sandbox;
+﻿using static Sandbox.GameObjectSystem;
 
 namespace Coroutines.Stallers;
 
 /// <summary>
 /// Pauses a coroutine for a specified amount of frames.
 /// </summary>
-/// <remarks>
-/// This can only be used on the client side.
-/// </remarks>
 public sealed class WaitForFrames : ICoroutineStaller
 {
 	/// <inheritdoc/>
 	public bool IsComplete => FramesTillComplete <= 0;
 	/// <inheritdoc/>
-	public ExecutionStrategy ExecutionStrategy => ExecutionStrategy.Frame;
+	public Stage PollingStage { get; } = Coroutine.DefaultPollingStage;
 
 	/// <summary>
 	/// The amount of frames left to wait.
@@ -26,7 +23,6 @@ public sealed class WaitForFrames : ICoroutineStaller
 	/// <param name="frames">The number of frames to wait for.</param>
 	public WaitForFrames( int frames )
 	{
-		Game.AssertClientOrMenu();
 		FramesTillComplete = frames;
 	}
 

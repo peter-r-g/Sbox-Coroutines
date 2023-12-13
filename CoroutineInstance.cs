@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Sandbox;
+using System.Collections.Generic;
 
 namespace Coroutines;
 
@@ -17,22 +18,22 @@ internal sealed class CoroutineInstance
 	internal bool IsFinished { get; private set; }
 
 	/// <summary>
-	/// Returns the current execution strategy of the coroutine.
+	/// Returns the current polling stage of the coroutine.
 	/// </summary>
-	internal ExecutionStrategy CurrentExecutionStrategy
+	internal GameObjectSystem.Stage CurrentPollingStage
 	{
 		get
 		{
-			if ( CurrentStall.ExecutionStrategy == ExecutionStrategy.Preserve )
-				return LastExecutionStrategy;
+			if ( CurrentStall.PollingStage == Coroutines.Coroutine.PreservePollingStage )
+				return LastPollingStage;
 
-			return CurrentStall.ExecutionStrategy;
+			return CurrentStall.PollingStage;
 		}
 	}
 	/// <summary>
-	/// The last valid execution strategy that was used.
+	/// The last valid polling stage that was used.
 	/// </summary>
-	private ExecutionStrategy LastExecutionStrategy { get; set; }
+	private GameObjectSystem.Stage LastPollingStage { get; set; }
 	/// <summary>
 	/// Returns the current staller of the coroutine.
 	/// </summary>
@@ -44,7 +45,7 @@ internal sealed class CoroutineInstance
 	/// <param name="coroutine">The coroutine to execute.</param>
 	internal CoroutineInstance( IEnumerator<ICoroutineStaller> coroutine )
 	{
-		LastExecutionStrategy = Coroutines.Coroutine.DefaultExecutionStrategy;
+		LastPollingStage = Coroutines.Coroutine.DefaultPollingStage;
 
 		Coroutine = coroutine;
 		IsFinished = !coroutine.MoveNext();
@@ -68,7 +69,7 @@ internal sealed class CoroutineInstance
 			return;
 		}
 
-		if ( CurrentStall.ExecutionStrategy != ExecutionStrategy.Preserve )
-			LastExecutionStrategy = CurrentStall.ExecutionStrategy;
+		if ( CurrentStall.PollingStage != Coroutines.Coroutine.PreservePollingStage )
+			LastPollingStage = CurrentStall.PollingStage;
 	}
 }

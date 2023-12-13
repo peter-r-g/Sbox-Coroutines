@@ -1,5 +1,5 @@
-﻿using Sandbox;
-using System;
+﻿using System;
+using static Sandbox.GameObjectSystem;
 
 namespace Coroutines.Stallers;
 
@@ -11,7 +11,7 @@ public sealed class WaitUntil : ICoroutineStaller
 	/// <inheritdoc/>
 	public bool IsComplete => Waiter();
 	/// <inheritdoc/>
-	public ExecutionStrategy ExecutionStrategy { get; }
+	public Stage PollingStage { get; }
 
 	/// <summary>
 	/// The method wait for to return true.
@@ -22,14 +22,11 @@ public sealed class WaitUntil : ICoroutineStaller
 	/// Initializes a new instance of <see cref="WaitUntil"/>.
 	/// </summary>
 	/// <param name="waiter">The method to wait for.</param>
-	/// <param name="executionStrategy">The way for the coroutine to wait for completion.</param>
-	public WaitUntil( Func<bool> waiter, ExecutionStrategy executionStrategy = ExecutionStrategy.Preserve )
+	/// <param name="pollingStage">The way for the coroutine to wait for completion.</param>
+	public WaitUntil( Func<bool> waiter, Stage pollingStage = Coroutine.PreservePollingStage )
 	{
-		if ( executionStrategy == ExecutionStrategy.Frame )
-			Game.AssertClientOrMenu();
-
 		Waiter = waiter;
-		ExecutionStrategy = executionStrategy;
+		PollingStage = pollingStage;
 	}
 
 	/// <inheritdoc/>

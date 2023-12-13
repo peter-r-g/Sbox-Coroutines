@@ -1,19 +1,17 @@
 ﻿using Sandbox;
+using static Sandbox.GameObjectSystem;
 
 namespace Coroutines.Stallers;
 
 /// <summary>
 /// Pauses a coroutine until a specified amount of seconds have passed.
 /// </summary>
-/// <remarks>
-/// This is not affected by <see cref="Game.TimeScale"/>.
-/// </remarks>
 public sealed class WaitForRealSeconds : ICoroutineStaller
 {
 	/// <inheritdoc/>
 	public bool IsComplete => RealSecondsUntilComplete <= 0;
 	/// <inheritdoc/>
-	public ExecutionStrategy ExecutionStrategy { get; }
+	public Stage PollingStage { get; }
 
 	/// <summary>
 	/// The number of seconds left until completion.
@@ -24,14 +22,11 @@ public sealed class WaitForRealSeconds : ICoroutineStaller
 	/// Initializes a new instance of <see cref="WaitForRealSeconds"/>.
 	/// </summary>
 	/// <param name="seconds">The number of seconds to wait.</param>
-	/// <param name="executionStrategy">The way for the coroutine to wait for completion.</param>
-	public WaitForRealSeconds( float seconds, ExecutionStrategy executionStrategy = ExecutionStrategy.Preserve )
+	/// <param name="pollingStage">The way for the coroutine to wait for completion.</param>
+	public WaitForRealSeconds( float seconds, Stage pollingStage = Coroutine.PreservePollingStage )
 	{
-		if ( executionStrategy == ExecutionStrategy.Frame )
-			Game.AssertClientOrMenu();
-
 		RealSecondsUntilComplete = seconds;
-		ExecutionStrategy = executionStrategy;
+		PollingStage = pollingStage;
 	}
 
 	/// <inheritdoc/>

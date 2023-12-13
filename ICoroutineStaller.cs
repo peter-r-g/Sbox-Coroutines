@@ -1,4 +1,6 @@
-﻿namespace Coroutines;
+﻿using static Sandbox.GameObjectSystem;
+
+namespace Coroutines;
 
 /// <summary>
 /// Defines a type that can stall a coroutine.
@@ -12,7 +14,7 @@ public interface ICoroutineStaller
 	/// <summary>
 	/// Returns the way for the staller to be updated and execution to continue.
 	/// </summary>
-	ExecutionStrategy ExecutionStrategy { get; }
+	Stage PollingStage { get; }
 
 	/// <summary>
 	/// Updates the stallers state.
