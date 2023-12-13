@@ -232,6 +232,12 @@ public class Coroutine : GameObjectSystem
 	/// <param name="stage">The <see cref="Stage"/> to step.</param>
 	private static void StepCoroutines( Stage stage )
 	{
+		if ( !GameManager.IsPlaying )
+		{
+			StopAll();
+			return;
+		}
+
 		foreach ( var coroutineInstance in Coroutines )
 		{
 			if ( coroutineInstance.CurrentPollingStage != stage )
