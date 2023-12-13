@@ -52,7 +52,11 @@ public class Coroutine : GameObjectSystem
 	/// <param name="scene">The scene that this system is operating within.</param>
 	public Coroutine( Scene scene ) : base( scene )
 	{
-		Listen( Stage.UpdateBones, int.MaxValue, SceneFrame, nameof( Coroutine ) );
+		foreach ( var val in Enum.GetValues<Stage>() )
+		{
+			var stage = val;
+			Listen( stage, int.MaxValue, () => StepCoroutines( stage ), nameof( Coroutine ) );
+		}
 	}
 
 	/// <summary>
@@ -220,14 +224,6 @@ public class Coroutine : GameObjectSystem
 
 		if ( foundInstance is not null )
 			Coroutines.Remove( foundInstance );
-	}
-
-	/// <summary>
-	/// Updates all coroutines that are blocked by a <see cref="Stage.UpdateBones"/> stage.
-	/// </summary>
-	private static void SceneFrame()
-	{
-		StepCoroutines( Stage.UpdateBones );
 	}
 
 	/// <summary>
