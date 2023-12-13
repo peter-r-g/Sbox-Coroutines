@@ -15,7 +15,7 @@ namespace Coroutines;
 /// All coroutines are executed within the main thread and will never leave it.
 /// All calls within this class are deferred to the main thread if called from outside of it.
 /// </summary>
-public static class Coroutine
+public class Coroutine : GameObjectSystem
 {
 	/// <summary>
 	/// The default <see cref="ExecutionStrategy"/> to use in coroutines.
@@ -38,6 +38,15 @@ public static class Coroutine
 	/// A main thread queue to add coroutines once their execution strategy has finished.
 	/// </summary>
 	private static Dictionary<ExecutionStrategy, Queue<CoroutineInstance>> QueuedCoroutines { get; } = new();
+
+	/// <summary>
+	/// Initializes a new instance of <see cref="Coroutine"/>. This should not need to be constructed in user code.
+	/// </summary>
+	/// <param name="scene">The scene that this system is operating within.</param>
+	public Coroutine( Scene scene ) : base( scene )
+	{
+		Listen( Stage.UpdateBones, int.MaxValue, SceneFrame, nameof( Coroutine ) );
+	}
 
 	/// <summary>
 	/// Starts a new coroutine that is fetched from the <paramref name="coroutineMethod"/>.
@@ -209,7 +218,6 @@ public static class Coroutine
 	/// <summary>
 	/// Updates all coroutines that are blocked by a <see cref="ExecutionStrategy.Frame"/> strategy.
 	/// </summary>
-	[Event( "frame" )]
 	private static void SceneFrame()
 	{
 		StepCoroutines( ExecutionStrategy.Frame );
