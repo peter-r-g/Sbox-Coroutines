@@ -1,0 +1,28 @@
+{
+  "Title": "Coroutines",
+  "Type": "library",
+  "Org": "gooman",
+  "Ident": "coroutines",
+  "Schema": 1,
+  "IncludeSourceFiles": false,
+  "Resources": null,
+  "PackageReferences": [],
+  "EditorReferences": null,
+  "IsWhitelistDisabled": false,
+  "Metadata": {
+    "CsProjName": "",
+    "Compiler": {
+      "RootNamespace": "Sandbox",
+      "DefineConstants": "SANDBOX;ADDON;DEBUG",
+      "NoWarn": "1701;1702;1591;",
+      "WarningsAsErrors": "8600;8601;8602;8603;8604;8613;8614;8619;8620;8622;8625;8629;8633;8524;8509;8767;8618;8765",
+      "TreatWarningsAsErrors": false,
+      "Nullables": true,
+      "Whitelist": true,
+      "ReleaseMode": "Debug",
+      "AssemblyReferences": [],
+      "IgnoreFolders": [],
+      "DistinctAssemblyReferences": []
+    }
+  }
+}
